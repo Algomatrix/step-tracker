@@ -9,15 +9,19 @@ import Foundation
 import HealthKit
 import Observation
 
-@Observable class HealthKitManager {
+@Observable
+@MainActor
+final class HealthKitData: Sendable {
+    var stepData: [HealthMetric] = []
+    var weightData: [HealthMetric] = []
+    var weightDiffData: [HealthMetric] = []
+}
+
+@Observable  final class HealthKitManager: Sendable {
 
     let store = HKHealthStore()
 
     let types: Set = [HKQuantityType(.stepCount), HKQuantityType(.bodyMass)]
-
-    var stepData: [HealthMetric] = []
-    var weightData: [HealthMetric] = []
-    var weightDiffData: [HealthMetric] = []
 
     func fetchStepCount() async throws -> [HealthMetric] {
         guard store.authorizationStatus(for: HKQuantityType(.stepCount)) != .notDetermined else {

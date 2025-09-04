@@ -41,6 +41,7 @@ struct HealthKitPermissionPrimingView: View {
             }
             .buttonStyle(.borderedProminent)
             .tint(.pink)
+            
         }
         .padding(30)
         .healthDataAccessRequest(store: hkManager.store,
@@ -49,10 +50,10 @@ struct HealthKitPermissionPrimingView: View {
                                  trigger: isShowingHealthKitPermissions) { result in
             switch result {
             case .success(_):
-                dismiss()
+                Task { @MainActor in dismiss() }
             case .failure(_):
                 // handle the error later
-                dismiss()
+                Task { @MainActor in dismiss() }
             }
         }
     }
