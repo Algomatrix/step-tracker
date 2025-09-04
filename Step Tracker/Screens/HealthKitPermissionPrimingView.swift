@@ -41,19 +41,19 @@ struct HealthKitPermissionPrimingView: View {
             }
             .buttonStyle(.borderedProminent)
             .tint(.pink)
+            
         }
         .padding(30)
-        .interactiveDismissDisabled()
         .healthDataAccessRequest(store: hkManager.store,
                                  shareTypes: hkManager.types,
                                  readTypes: hkManager.types,
                                  trigger: isShowingHealthKitPermissions) { result in
             switch result {
             case .success(_):
-                dismiss()
+                Task { @MainActor in dismiss() }
             case .failure(_):
                 // handle the error later
-                dismiss()
+                Task { @MainActor in dismiss() }
             }
         }
     }
