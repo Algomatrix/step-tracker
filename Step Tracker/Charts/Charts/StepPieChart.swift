@@ -25,15 +25,7 @@ struct StepPieChart: View {
     }
 
     var body: some View {
-        let config = ChartContainerConfiguration(
-            title: "Averages",
-            symbol: "calendar",
-            subtitle: "Last 28 Days",
-            context: .steps,
-            isNav: true
-        )
-
-        ChartContainer(config: config) {
+        ChartContainer(chartType: .stepWeekdayPie) {
             Chart {
                 ForEach(chartData) { weekday in
                     SectorMark(angle: .value("Average Steps", weekday.value),
@@ -43,6 +35,8 @@ struct StepPieChart: View {
                     .foregroundStyle(.pink.gradient)
                     .cornerRadius(6)
                     .opacity(selectedWeekday?.date.weekdayInt == weekday.date.weekdayInt ? 1.0 : 0.3)
+                    .accessibilityLabel(weekday.date.weekdayTitle)
+                    .accessibilityValue("\(Int(weekday.value)) steps")
                 }
             }
             .chartAngleSelection(value: $rawSelectedChartValue)
@@ -73,6 +67,7 @@ struct StepPieChart: View {
                                     .animation(.none)
                             }
                             .position(x: frame.midX, y: frame.midY)
+                            .accessibilityHidden(true)
                         }
                     }
                 }

@@ -20,26 +20,22 @@ struct WeightDiffBarChart: View {
     }
 
     var body: some View {
-        let config = ChartContainerConfiguration(
-            title: "Avergae Weight Change",
-            symbol: "figure",
-            subtitle: "Per Weekday (Last 7 Days)",
-            context: .weight,
-            isNav: false
-        )
-
-        ChartContainer(config: config) {
+        ChartContainer(chartType: .weightDiffBar) {
             Chart {
                 if let selectedData {
                     ChartAnnotationView(data: selectedData, context: .weight)
                 }
 
                 ForEach(chartData) { weightDiff in
-                    BarMark(
-                        x: .value("Date", weightDiff.date, unit: .day),
-                        y: .value("Weight Diff", weightDiff.value)
-                    )
-                    .foregroundStyle(weightDiff.value >= 0 ? Color.indigo.gradient : Color.mint.gradient)
+                    Plot {
+                        BarMark(
+                            x: .value("Date", weightDiff.date, unit: .day),
+                            y: .value("Weight Diff", weightDiff.value)
+                        )
+                        .foregroundStyle(weightDiff.value >= 0 ? Color.indigo.gradient : Color.mint.gradient)
+                    }
+                    .accessibilityLabel(weightDiff.date.weekdayTitle)
+                    .accessibilityValue("\(weightDiff.value.formatted(.number.precision(.fractionLength(1)).sign(strategy: .always()))) kilos")
                 }
             }
             .frame(height: 150)
